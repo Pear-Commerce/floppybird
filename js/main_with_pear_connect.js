@@ -86,6 +86,7 @@ function showSplash()
 
    //update the player in preparation for the next game
    $("#player").css({ y: 0, x: 0 });
+   
    updatePlayer($("#player"));
 
    soundSwoosh.stop();
@@ -124,13 +125,14 @@ function startGame()
    //start up our loops
    var updaterate = 1000.0 / 60.0 ; //60 times a second
    loopGameloop = setInterval(gameloop, updaterate);
-   loopPipeloop = setInterval(updatePipes, 4200);
+   //loopPipeloop = setInterval(updatePipes, 4200);
    setInterval(removePipes, 500);
 
    //jump from the start!
    playerJump();
 }
 
+let left = 60;
 function updatePlayer(player)
 {
    //rotation
@@ -138,7 +140,11 @@ function updatePlayer(player)
 
    //apply rotation and position
    $(player).css({ rotate: rotation, top: position });
+   left += 3;
+   $(player).css({ left:left });
 }
+
+
 
 function gameloop() {
    var player = $("#player");
@@ -150,6 +156,14 @@ function gameloop() {
    //update the player
    updatePlayer(player);
 
+
+   let playerEl = document.querySelector('#player');
+   let left = parseInt((playerEl.style.left + "").replace("px", ""));
+   let containerWidth = document.getElementById('gamecontainer').offsetWidth;
+   if (left > containerWidth) {
+    playerDead();
+    return;
+   }
    //create the bounding box
    var box = document.getElementById('player').getBoundingClientRect();
    var origwidth = 34.0;
@@ -175,8 +189,7 @@ function gameloop() {
    //did we hit the ground?
    if(box.bottom >= $("#land").offset().top)
    {
-      playerDead();
-      return;
+      screenClick();
    }
 
    //have they tried to escape through the ceiling? :o
@@ -322,8 +335,6 @@ function setMedal()
       medal = "silver";
    if(score >= 3)
       medal = "gold";
-   if(score >= 4)
-      medal = "platinum";
 
    elemmedal.append('<img src="assets/medal_' + medal +'.png" alt="' + medal +'">');
 
@@ -353,7 +364,7 @@ function playerDead()
    loopPipeloop = null;
 
    //mobile browsers don't support buzz bindOnce event
-   if(isIncompatible.any())
+   if(isIncompatible.any() || true)
    {
       //skip right to showing score
       showScore();
@@ -371,6 +382,7 @@ function playerDead()
 
 function showScore()
 {
+   score = 100;
    //unhide us
    $("#scoreboard").css("display", "block");
 
@@ -417,6 +429,8 @@ function showScore()
 }
 
 $("#replay").click(function() {
+   window.location.reload();
+   return;
    //make sure we can only click once
    if(!replayclickable)
       return;

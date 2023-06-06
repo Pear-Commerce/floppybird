@@ -141,9 +141,6 @@ Screen - Game
    background-repeat: repeat-x;
    background-position: 0px 100%;
    background-color: #4ec0ca;
-
-   -webkit-animation: animSky 7s linear infinite;
-   animation: animSky 7s linear infinite;
 }
 
 #flyarea
@@ -163,8 +160,7 @@ Screen - Game
    background-image: url('../assets/ceiling.png');
    background-repeat: repeat-x;
 
-   -webkit-animation: animCeiling 481ms linear infinite;
-   animation: animCeiling 481ms linear infinite;
+  
 }
 
 #land
